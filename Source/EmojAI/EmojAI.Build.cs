@@ -18,6 +18,7 @@ public class EmojAI : ModuleRules
             "AIModule",
             "Core",
             "CoreUObject",
+            "DeveloperSettings",
             "Engine",
             "GameplayTasks",
             "Slate",

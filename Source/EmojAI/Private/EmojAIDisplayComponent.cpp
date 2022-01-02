@@ -5,15 +5,11 @@
 // as published by Sam Hocevar. See the COPYING file for more details.
 
 #include "EmojAIDisplayComponent.h"
-#include "Materials/Material.h"
-#include "UObject/ConstructorHelpers.h"
+#include "EmojAISettings.h"
 #include "Widgets/Text/STextBlock.h"
 
 UEmojAIDisplayComponent::UEmojAIDisplayComponent()
 {
-	static ConstructorHelpers::FObjectFinder<UMaterial> MaterialFinder(
-		TEXT("Material'/EmojAI/M_Widget_Passthrough.M_Widget_Passthrough'"));
-	MaskedMaterial = MaterialFinder.Object;
 	bIsTwoSided = true;
 
 	SetAbsolute(false, true, false); // Detach rotation
@@ -38,7 +34,12 @@ void UEmojAIDisplayComponent::BeginPlay()
 
 UMaterialInterface* UEmojAIDisplayComponent::GetMaterial(int32 MaterialIndex) const
 {
-	return MaskedMaterial;
+	// Deliberately not calling Super, this condition mimics what it does
+	if (OverrideMaterials.IsValidIndex(MaterialIndex) &&
+	    OverrideMaterials[MaterialIndex])
+		return OverrideMaterials[MaterialIndex];
+
+	return GetDefault<UEmojAISettings>()->WidgetMaterial.LoadSynchronous();
 }
 
 void UEmojAIDisplayComponent::Set(FString State)
