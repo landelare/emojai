@@ -24,7 +24,7 @@ class EMOJAI_API UEmojAIDisplayComponent : public UWidgetComponent
 
 public:
 	UPROPERTY(EditAnywhere, Category = "EmojAI Display")
-	int32 FontSize = 36;
+	int32 FontSize;
 
 	UEmojAIDisplayComponent();
 

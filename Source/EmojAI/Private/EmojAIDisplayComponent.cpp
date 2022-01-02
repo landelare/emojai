@@ -15,7 +15,10 @@ UEmojAIDisplayComponent::UEmojAIDisplayComponent()
 	SetAbsolute(false, true, false); // Detach rotation
 	SetCastShadow(false);
 	SetWidgetSpace(EWidgetSpace::World);
-	SetDrawSize(FVector2D(400, 60));
+
+	auto* Settings = GetDefault<UEmojAISettings>();
+	FontSize = Settings->FontSize;
+	SetDrawSize(Settings->DrawSize);
 }
 
 void UEmojAIDisplayComponent::BeginPlay()

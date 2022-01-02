@@ -20,5 +20,11 @@ public:
 	UPROPERTY(Config, EditAnywhere, Category = "UI")
 	TSoftObjectPtr<class UMaterialInterface> WidgetMaterial;
 
+	UPROPERTY(Config, EditAnywhere, Category = "UI")
+	int32 FontSize = 36;
+
+	UPROPERTY(Config, EditAnywhere, Category = "UI")
+	FVector2D DrawSize = {400, 60};
+
 	UEmojAISettings();
 };
