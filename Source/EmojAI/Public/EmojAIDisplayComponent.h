@@ -24,12 +24,23 @@ class EMOJAI_API UEmojAIDisplayComponent : public UWidgetComponent
 
 public:
 	UPROPERTY(EditAnywhere, Category = "EmojAI Display")
+	bool bUseDefaultFontSize = true;
+
+	UPROPERTY(EditAnywhere, Category = "EmojAI Display")
 	int32 FontSize;
+
+	UPROPERTY(EditAnywhere, Category = "EmojAI Display")
+	bool bUseDefaultDrawSize = true;
 
 	UEmojAIDisplayComponent();
 
 	virtual void BeginPlay() override;
 	virtual UMaterialInterface* GetMaterial(int32 MaterialIndex) const override;
+
+#if WITH_EDITOR
+	virtual bool CanEditChange(const FProperty* InProperty) const override;
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
 
 	/**
 	 * Replaces what's displayed with the provided string.
@@ -63,4 +74,9 @@ public:
 
 private:
 	void UpdateText();
+
+#if WITH_EDITOR
+	void OnSettingChanged(UObject* SettingsObject,
+	                      FPropertyChangedEvent& PropertyChangedEvent);
+#endif
 };

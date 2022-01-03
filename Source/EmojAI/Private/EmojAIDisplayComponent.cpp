@@ -19,6 +19,11 @@ UEmojAIDisplayComponent::UEmojAIDisplayComponent()
 	auto* Settings = GetDefault<UEmojAISettings>();
 	FontSize = Settings->FontSize;
 	SetDrawSize(Settings->DrawSize);
+
+#if WITH_EDITOR
+	auto& Delegate = GetMutableDefault<UEmojAISettings>()->OnSettingChanged();
+	Delegate.AddUObject(this, &ThisClass::OnSettingChanged);
+#endif
 }
 
 void UEmojAIDisplayComponent::BeginPlay()
@@ -44,6 +49,28 @@ UMaterialInterface* UEmojAIDisplayComponent::GetMaterial(int32 MaterialIndex) co
 
 	return GetDefault<UEmojAISettings>()->WidgetMaterial.LoadSynchronous();
 }
+
+#if WITH_EDITOR
+bool UEmojAIDisplayComponent::CanEditChange(const FProperty* InProperty) const
+{
+	FName PropertyName = InProperty->GetFName();
+
+	if (PropertyName == GET_MEMBER_NAME_CHECKED(ThisClass, FontSize))
+		return !bUseDefaultFontSize;
+
+	// This is defined in UWidgetComponent but it only compiles with ThisClass
+	if (PropertyName == GET_MEMBER_NAME_CHECKED(ThisClass, DrawSize))
+		return !bUseDefaultDrawSize;
+
+	return Super::CanEditChange(InProperty);
+}
+
+void UEmojAIDisplayComponent::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+	OnSettingChanged(GetMutableDefault<UEmojAISettings>(), PropertyChangedEvent);
+}
+#endif
 
 void UEmojAIDisplayComponent::Set(FString State)
 {
@@ -78,3 +105,27 @@ void UEmojAIDisplayComponent::UpdateText()
 	FString Text = FString::Join(Stack, TEXT("|"));
 	TextBlock->SetText(FText::AsCultureInvariant(MoveTemp(Text)));
 }
+
+#if WITH_EDITOR
+void UEmojAIDisplayComponent::OnSettingChanged(
+	UObject* SettingsObject, FPropertyChangedEvent& PropertyChangedEvent)
+{
+	auto* Settings = CastChecked<UEmojAISettings>(SettingsObject);
+
+	if (bUseDefaultFontSize)
+		FontSize = Settings->FontSize;
+
+	if (bUseDefaultDrawSize)
+	{
+		SetDrawSize(Settings->DrawSize);
+		UpdateWidget();
+	}
+
+	if (TextBlock)
+	{
+		FSlateFontInfo FontInfo = FCoreStyle::GetDefaultFontStyle("Regular", FontSize);
+		TextBlock->SetFont(FontInfo);
+		UpdateText();
+	}
+}
+#endif
