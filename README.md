@@ -16,3 +16,6 @@ For everything else, the component comes with a C++ and Blueprint API:
 The plugin works with arbitrary strings of course, but where's the fun in that?
 Emoji characters turned out to be more useful than you'd initially think,
 they're very compact.
+
+Don't forget that you can bring up the built-in emoji selector of Windows by
+pressing `Win+.` or `Win+;` in the Unreal Editor!
