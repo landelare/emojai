@@ -1,5 +1,10 @@
 # EmojAI
 
+> [!IMPORTANT]
+> This plugin has required no maintenance for years; the original
+> Unreal Engine 4 code still works on Unreal Engine 5.5.
+> Further engine versions are no longer monitored.
+
 Born from a silly idea over at [Unreal Slackers](https://unrealslackers.org),
 this plugin implements a widget component for Unreal Engine that lets you
 display Behavior Tree states as emoji above your AI pawns:
